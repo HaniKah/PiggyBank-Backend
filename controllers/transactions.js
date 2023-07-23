@@ -10,7 +10,6 @@ const newTransaction = async (req, res) => {
       tran_sign,
       tran_currency,
       tran_date,
-      tran_id,
     } = req.body;
     const user = req.user._id;
 
@@ -22,7 +21,6 @@ const newTransaction = async (req, res) => {
       tran_currency,
       tran_date,
       user,
-      tran_id,
     });
     res.status(201).json({ success: true, data: newTransaction });
   } catch (error) {
@@ -66,66 +64,17 @@ const deleteAllTransactions = async (req, res) => {
 
 // function getAll Transactions for a user
 const getAllTransaction = async (req, res) => {
-  console.log("get all trans")
   try {
-    const { timeperiod } = req.query;
+    let query = {};
     const user = req.user._id;
-    if (timeperiod === "all") {
-      const user = req.user._id;
-      const transactions = await Transaction.find({ user });
-      console.log("display all transactions by user:", transactions)
-      res.status(200).json(transactions);
-    } else {
-      const user = req.user._id;
-      let query = {};
-      const currentDate = new Date();
-      if (timeperiod === "month") {
-        console.log("by month")
-        const startOfmonth = new Date(
-          currentDate.getFullYear(),
-          currentDate.getMonth(),
-          1
-        );
-        query = { user, tran_date: { $gte: startOfmonth, $lte: currentDate } };
-      } else if (timeperiod === "3months") {
-        console.log("3 month")
-        const last3months = new Date(
-          currentDate.getFullYear(),
-          currentDate.getMonth() - 3,
-          1
-        );
-        query = { user, tran_date: { $gte: last3months, $lte: currentDate } };
-      } else if (timeperiod === "6months") {
-        console.log("6 month")
-        const last6months = new Date(
-          currentDate.getFullYear(),
-          currentDate.getMonth() - 6,
-          1
-        );
-        query = { user, tran_date: { $gte: last6months, $lte: currentDate } };
-      } else if (timeperiod === "year") {
-        console.log("by year")
-        const startOfYear = new Date(currentDate.getFullYear(), 1, 1);
-        query = { tran_date: { $gte: startOfYear, $lte: currentDate } };
-      } else if (timeperiod === "week") {
-        console.log("by week")
-        const lastWeek = new Date(
-          currentDate.getFullYear(),
-          currentDate.getMonth(),
-          currentDate.getDate() - 7
-        );
-        const currentday = new Date(
-          currentDate.getFullYear(),
-          currentDate.getMonth(),
-          currentDate.getDate()
-        );
-        query = { user, tran_date: { $gte: lastWeek, $lte: currentday } };
-      }
-      console.log("req.user._id:", req.user._id);
-      const transactions = await Transaction.find(query);
-      console.log("filter by date:", transactions )
-      res.status(200).json(transactions);
-    }
+    console.log(user.bgRed);
+    const currentDate = new Date();
+    const startDate = new Date(currentDate.getFullYear(), 1, 1);
+    const endDate = new Date(currentDate.getFullYear(), 12, 0);
+    console.log("this is end date".bgGreen, endDate);
+    query = { user: user, tran_date: { $gte: startDate, $lte: endDate } };
+    const transactions = await Transaction.find(query);
+    res.status(200).json(transactions);
   } catch (error) {
     res.status(400).json({ msg: error });
   }

@@ -2,22 +2,6 @@ const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 const validator = require("validator");
 
-//Schema for the budget
-const budgetsSchema = new mongoose.Schema({
-  category_name: {
-    type: String,
-  },
-  budget_description: {
-    type: String,
-  },
-  limit_amount: {
-    type: String,
-  },
-  budget_date: {
-    type: Date,
-  },
-});
-
 //Schema for the user
 const usersSchema = new mongoose.Schema({
   first_name: { type: String, required: true },
@@ -30,7 +14,6 @@ const usersSchema = new mongoose.Schema({
   password: { type: String, required: true },
   country_code: { type: String },
   access_token: { type: String },
-  budgets: [budgetsSchema],
 });
 
 // creating a custom static method
