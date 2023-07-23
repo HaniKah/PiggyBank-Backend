@@ -5,7 +5,6 @@ const {
   deleteOneUser,
   loginUser,
   signupUser,
-  budget,
 } = require("../controllers/users");
 
 const api = express.Router();
@@ -20,7 +19,7 @@ api.post("/signup", signupUser);
 // api.route("/").post(newUser);
 
 // Path to update or to delete user
-api.route("/:id").put(updateUser).delete(deleteOneUser).get(budget);
+api.route("/:id").put(updateUser).delete(deleteOneUser);
 
 // Path to get budgets from one User
 // api.route("/:id/budget").get(budget);

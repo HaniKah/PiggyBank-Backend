@@ -20,7 +20,7 @@ const PLAID_COUNTRY_CODES = (process.env.PLAID_COUNTRY_CODES || "DE").split(
   ","
 );
 const PLAID_REDIRECT_URI = process.env.PLAID_REDIRECT_URI || "";
-const RECORDING_MODE = process.env.RECORDING_MODE || false
+const RECORDING_MODE = process.env.RECORDING_MODE || false;
 // TODO: save the following to mongoDB user!!!!
 let ACCESS_TOKEN = null;
 let PUBLIC_TOKEN = null;
@@ -43,6 +43,7 @@ let TRANSFER_ID = null;
 
 const userRoutes = require("./routes/users");
 const transactionRoutes = require("./routes/transactions");
+const budgetRoutes = require("./routes/budgets");
 const upload = require("./routes/upload");
 const plaid = require("./routes/plaid");
 
@@ -59,6 +60,7 @@ app.use(bodyParser.json());
 
 app.use("/users", userRoutes);
 app.use("/transaction", transactionRoutes);
+app.use("/budget", budgetRoutes);
 app.use("/api", upload);
 app.use("/api", plaid);
 
@@ -67,5 +69,5 @@ app.get("/", (req, res) => {
 });
 
 app.listen(PORT, () => {
-  console.log(`server is running on port ${PORT}`.america);
+  console.log(`server is running on port ${PORT}`.bgBlue);
 });

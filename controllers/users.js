@@ -55,7 +55,6 @@ const updateUser = async (req, res) => {
       password,
       country_code,
       access_token,
-      budgets,
     } = req.body;
 
     if (first_name) updateFields.first_name = first_name;
@@ -64,11 +63,6 @@ const updateUser = async (req, res) => {
     if (password) updateFields.password = password;
     if (country_code) updateFields.country_code = country_code;
     if (access_token) updateFields.access_token = access_token;
-    // if (budgets) updateFields.$push = { budgets: budgets };
-    if (budgets) {
-      // If budgets field is present in the request body, update the budgets array
-      updateFields.budgets = budgets;
-    }
 
     const user = await Users.findOneAndUpdate({ _id: id }, updateFields, {
       new: true,
@@ -103,52 +97,9 @@ const deleteOneUser = async (req, res) => {
     res.status(500).json({ success: false, error });
   }
 };
-
-// function get budgets
-
-// const budget = async (req, res) => {
-//   try {
-//     const { id } = req.params;
-
-//     console.log("budget is working".bgRed);
-//     const user = await Users.findById(id);
-//     if (!user) {
-//       res.status(404).json({ success: false, msg: "user is not found" });
-//     } else {
-//       res.status(200).json({
-//         success: true,
-//         budgetData: user.budgets,
-//       });
-//     }
-//   } catch (error) {}
-// };
-
-//last
-const budget = async (req, res) => {
-  try {
-    const { id } = req.params;
-
-    //alt
-    const user = await Users.findById(id);
-    console.log(user.budgets);
-    if (!user) {
-      return res.status(404).json({ success: false, msg: "user is not found" });
-    }
-    // const user = await Users.findById(id);
-    // if (!user) {
-    //   res.status(404).json({ success: false, msg: "user is not found" });
-    else {
-      res.status(200).json(user.budgets);
-    }
-  } catch (error) {
-    res.status(500).json({ success: false, error });
-  }
-};
-
 module.exports = {
   loginUser,
   signupUser,
   updateUser,
   deleteOneUser,
-  budget,
 };
