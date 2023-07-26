@@ -2,17 +2,17 @@ const Budgets = require("../schemas/Budgets");
 
 const getBudgets = async (req, res) => {
   try {
+    let query = {};
     const user = req.user._id;
-
-    //alt
-    const budgets = await Budgets.find({ user });
-    if (!user) {
-      return res.status(404).json({ success: false, msg: "user is not found" });
-    } else {
-      const data = res.status(200).json(budgets);
-    }
+    const currentDate = new Date();
+    const startDate = new Date(currentDate.getFullYear(), 1, 1);
+    const endDate = new Date(currentDate.getFullYear(), 12, 0);
+    console.log("this is end date".bgGreen, endDate);
+    query = { user: user, budget_date: { $gte: startDate, $lte: endDate } };
+    const budgets = await Budgets.find(query);
+    res.status(200).json(budgets);
   } catch (error) {
-    res.status(500).json({ success: false, error });
+    res.status(400).json({ msg: error });
   }
 };
 
