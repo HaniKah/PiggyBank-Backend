@@ -4,13 +4,27 @@ const getBudgets = async (req, res) => {
   try {
     let query = {};
     const user = req.user._id;
-    const currentDate = new Date();
-    const startDate = new Date(currentDate.getFullYear(), 1, 1);
-    const endDate = new Date(currentDate.getFullYear(), 12, 0);
-    console.log("this is end date".bgGreen, endDate);
-    query = { user: user, budget_date: { $gte: startDate, $lte: endDate } };
-    const budgets = await Budgets.find(query);
-    res.status(200).json(budgets);
+    const timeperiod = Number(req.query.timeperiod);
+    const today = new Date();
+    if (timeperiod < 11) {
+      const start = new Date(today.getFullYear(), timeperiod, 1);
+      const end = new Date(today.getFullYear(), timeperiod + 1, 0);
+      query = {
+        user: user,
+        budget_date: { $gte: start, $lte: end },
+      };
+      const budgets = await Budgets.find(query);
+      res.status(200).json(budgets);
+    } else {
+      const start = new Date(timeperiod, 1, 1);
+      const end = new Date(timeperiod, 12, 31);
+      query = {
+        user: user,
+        budget_date: { $gte: start, $lte: end },
+      };
+      const budgets = await Budgets.find(query);
+      res.status(200).json(budgets);
+    }
   } catch (error) {
     res.status(400).json({ msg: error });
   }
