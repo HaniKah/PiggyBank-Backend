@@ -67,16 +67,30 @@ const getAllTransaction = async (req, res) => {
   try {
     let query = {};
     const user = req.user._id;
-    console.log(user.bgRed);
-    const currentDate = new Date();
-    const startDate = new Date(currentDate.getFullYear(), 1, 1);
-    const endDate = new Date(currentDate.getFullYear(), 12, 0);
-    console.log("this is end date".bgGreen, endDate);
-    query = { user: user, tran_date: { $gte: startDate, $lte: endDate } };
-    const transactions = await Transaction.find(query);
-    res.status(200).json(transactions);
+    const timeperiod = Number(req.query.timeperiod);
+    console.log("timePeriod".bgRed, timeperiod);
+    const today = new Date();
+    if (timeperiod < 11) {
+      const start = new Date(today.getFullYear(), timeperiod, 1);
+      const end = new Date(today.getFullYear(), timeperiod + 1, 0);
+      query = {
+        user: user,
+        tran_date: { $gte: start, $lte: end },
+      };
+      const transactions = await Transaction.find(query);
+      res.status(200).json(transactions);
+    } else {
+      const start = new Date(timeperiod, 1, 1);
+      const end = new Date(timeperiod, 12, 31);
+      query = {
+        user: user,
+        tran_date: { $gte: start, $lte: end },
+      };
+      const transactions = await Transaction.find(query);
+      res.status(200).json(transactions);
+    }
   } catch (error) {
-    res.status(400).json({ msg: error });
+    res.status(400).json({ msg: "this is the Error", error });
   }
 };
 
